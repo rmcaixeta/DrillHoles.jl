@@ -4,6 +4,17 @@
 
 `DrillHoles.jl` is a package written in Julia for drill holes desurvey and compositing.
 
+**This fork is based in the version `0.1.4` of the `JuliaEarth/DrillHoles.jl`, before some major refactoring. This version is currently (Apr 24) preferred for the following situations:**
+
+- **The coordinates after desurvey matches commercial softwares**
+- **More options of compositing**
+- **Warnings available for some issues during desurvey**
+- **Big datasets will run faster in this version**
+
+**Known bugs on the other hand (corrected on the official version):**
+
+- **Merging multiple tables may generate some issues in categorical variables in some specific conditions**
+
 ## Installation
 
 First, it is necessary to install Julia. Installation instructions for Windows, Linux and macOS are available [here](https://julialang.org/downloads/platform/).
@@ -57,9 +68,6 @@ using GeoStats
 pointset = georef(comps.table, (:X,:Y,:Z))
 ```
 
-## Documentation
-
-The documentation of the main functions are available as [docstrings](https://juliahub.com/docs/DrillHoles)
 
 [build-img]: https://img.shields.io/github/actions/workflow/status/rmcaixeta/DrillHoles.jl/CI.yml?branch=master
 [build-url]: https://github.com/rmcaixeta/DrillHoles.jl/actions
