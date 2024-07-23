@@ -95,10 +95,13 @@ function findbounds(depths::AbstractArray, at)
 
 	# check if depth is after last interval
 	nearid == length(depths) && nearest < at && return (nearid,nearid)
+	#println("$nearest $at")
 
 	# return (previous, next) survey ids for given depth
     nearest == at && return (nearid, nearid)
-    nearest >  at && return (nearid-1, nearid)
+    #nearest >  at && return (nearid-1, nearid)
+    nearest >  at && nearid > 1 && return (nearid-1, nearid)
+    nearest >  at && nearid < 1.5 && return (nearid, nearid)
     nearest <  at && return (nearid, nearid+1)
 end
 
@@ -175,6 +178,7 @@ function fillxyz!(tab, trace, pars)
 
 		# get surveys bounding given depth
 		b   = findbounds(dht[:,at],atx)
+		#println("$bhid $atx $b")
 		d1x = atx-dht[b[1],at]
 
 		if d1x == 0

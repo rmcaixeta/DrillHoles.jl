@@ -50,11 +50,11 @@ function mergetables(intervals, pars)
             ismissing(out[i,"_LEN$j"]) && continue
             adj = Dict(1 => 0, 2 => out[i,"_LEN$j"]-out[i,"LENGTH"])
             adj[2] ≈ 0 && continue
-            while adj[2] > 0 && adj[2] ≉  0
+            while adj[2] > 1e-10
                 adj[1] += 1
                 adj[2] -= out[i+adj[1],"LENGTH"]
             end
-
+            
             # repeat table interval values to next i2 merged intervals
             i1, i2 = (i+1), (i+adj[1])
             for col in cols[j]

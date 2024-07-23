@@ -32,7 +32,7 @@ function composite(dhf::DrillHole; interval::Number=1.0, zone=nothing,
   # initial assertions
   @assert mode ∈ [:equalcomp, :nodiscard] "invalid method"
   @assert mincomp <= interval "mincomp must be <= interval"
-  
+
   # copy drill hole and get column names
   dh   = copy(dhf.table)
   pars = dhf.pars
@@ -84,8 +84,8 @@ function composite(dhf::DrillHole; interval::Number=1.0, zone=nothing,
       end
 
       intlen  = nbint > 1 ? len/nbint : len
-      minfrom = minimum(grp[!,:FROM])
-      maxto   = maximum(grp[!,:TO])
+      minfrom = minimum(grp[!,from])
+      maxto   = maximum(grp[!,to])
 
       tab[!,from]     = collect(minfrom:intlen:maxto)[1:nbint]
       tab[!,to]       = tab[!,from] .+ intlen
@@ -101,8 +101,8 @@ function composite(dhf::DrillHole; interval::Number=1.0, zone=nothing,
       last >= mincomp && (nbint += 1)
       last <  mincomp && (last = interval)
 
-      minfrom = minimum(grp[!,:FROM])
-      maxto   = maximum(grp[!,:TO])
+      minfrom = minimum(grp[!,from])
+      maxto   = maximum(grp[!,to])
 
       tab[!,from]    = collect(minfrom:interval:maxto)[1:nbint]
       tab[!,to]      = tab[!,from] .+ interval

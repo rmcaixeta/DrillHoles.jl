@@ -4,7 +4,7 @@
 
 `DrillHoles.jl` is a package written in Julia for drill holes desurvey and compositing.
 
-**This fork is based in the version `0.1.4` of the `JuliaEarth/DrillHoles.jl`, before some major refactoring. This version is currently (Apr 24) preferred for the following situations:**
+**This fork is based in the version `0.1.4` of the [`JuliaEarth/DrillHoles.jl`](https://github.com/JuliaEarth/DrillHoles.jl), before some major refactoring. This version is currently (Apr 24) preferred for the following situations:**
 
 - **The coordinates after desurvey matches commercial softwares**
 - **More options of compositing**
