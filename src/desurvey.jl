@@ -151,7 +151,7 @@ function fillxyz!(trace, pars)
 end
 
 # fill xyz for interval tables with from-to information
-function fillxyz!(tab, trace, pars)
+function fillxyz!(tab, trace, pars; full_output=false)
 	# get column names
 	bh, at, az, dp, tang = pars.holeid, pars.at, pars.azm, pars.dip, pars.tang
 	from, to = pars.from, pars.to
@@ -161,6 +161,14 @@ function fillxyz!(tab, trace, pars)
 	tab[!,:X] .= -9999.9999
 	tab[!,:Y] .= -9999.9999
 	tab[!,:Z] .= -9999.9999
+	if full_output
+		tab[!,:X_FROM] .= -9999.9999
+		tab[!,:Y_FROM] .= -9999.9999
+		tab[!,:Z_FROM] .= -9999.9999
+		tab[!,:X_TO] .= -9999.9999
+		tab[!,:Y_TO] .= -9999.9999
+		tab[!,:Z_TO] .= -9999.9999
+	end
 
 	# get first hole name and get trace of that hole
 	lastbhid = tab[1,bh]
@@ -198,6 +206,60 @@ function fillxyz!(tab, trace, pars)
 			tab[i,:X] = dx + dht[b[1],:X]
 			tab[i,:Y] = dy + dht[b[1],:Y]
 			tab[i,:Z] = dz + dht[b[1],:Z]
+		end
+		
+		if full_output
+			atx = tab[i,from]
+			# get surveys bounding given depth
+			b   = findbounds(dht[:,at],atx)
+			#println("$bhid $atx $b")
+			d1x = atx-dht[b[1],at]
+
+			if d1x == 0
+				# if interval depth matches trace depth, get trace coordinates
+				tab[i,:X_FROM] = dht[b[1],:X]
+				tab[i,:Y_FROM] = dht[b[1],:Y]
+				tab[i,:Z_FROM] = dht[b[1],:Z]
+			else
+				# if not, calculate coordinates increments dx,dy,dz
+				d12 = dht[b[2],at]-dht[b[1],at]
+				az1, dp1 = dht[b[1],az], f*dht[b[1],dp]
+				az2, dp2 = dht[b[2],az], f*dht[b[2],dp]
+				azx, dpx = b[1]==b[2] ? (az2, dp2) : weightedangs([az1,dp1],[az2,dp2],d12,d1x)
+				dx,dy,dz = tang ? tangential(az1,dp1,d1x) : mincurv(az1,dp1,azx,dpx,d1x)
+
+				# add increments dx,dy,dz to trace coordinates
+				tab[i,:X_FROM] = dx + dht[b[1],:X]
+				tab[i,:Y_FROM] = dy + dht[b[1],:Y]
+				tab[i,:Z_FROM] = dz + dht[b[1],:Z]
+			end
+			
+			atx = tab[i,to]
+			# get surveys bounding given depth
+			b   = findbounds(dht[:,at],atx)
+			#println("$bhid $atx $b")
+			d1x = atx-dht[b[1],at]
+
+			if d1x == 0
+				# if interval depth matches trace depth, get trace coordinates
+				tab[i,:X_TO] = dht[b[1],:X]
+				tab[i,:Y_TO] = dht[b[1],:Y]
+				tab[i,:Z_TO] = dht[b[1],:Z]
+			else
+				# if not, calculate coordinates increments dx,dy,dz
+				d12 = dht[b[2],at]-dht[b[1],at]
+				az1, dp1 = dht[b[1],az], f*dht[b[1],dp]
+				az2, dp2 = dht[b[2],az], f*dht[b[2],dp]
+				azx, dpx = b[1]==b[2] ? (az2, dp2) : weightedangs([az1,dp1],[az2,dp2],d12,d1x)
+				dx,dy,dz = tang ? tangential(az1,dp1,d1x) : mincurv(az1,dp1,azx,dpx,d1x)
+
+				# add increments dx,dy,dz to trace coordinates
+				tab[i,:X_TO] = dx + dht[b[1],:X]
+				tab[i,:Y_TO] = dy + dht[b[1],:Y]
+				tab[i,:Z_TO] = dz + dht[b[1],:Z]
+			end
+
+		
 		end
 	end
 	# check if some coordinate was not filled and return a warning if necessary
