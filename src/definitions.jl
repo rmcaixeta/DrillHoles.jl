@@ -72,6 +72,7 @@ Intervals = Union{Interval,AbstractArray{Interval}}
 
 """
     DrillHole(table, trace, pars, warns)
+    DrillHole(table, trace, pars)
 
 Drill hole object. `table` stores the desurveyed data. `trace` and `pars` store
 parameters for eventual post-processing or later drill hole compositing. `warns`
@@ -82,6 +83,11 @@ struct DrillHole
 	trace::Union{AbstractDataFrame,Nothing}
 	pars::NamedTuple
 	warns::AbstractDataFrame
+end
+
+function DrillHole(table::AbstractDataFrame, trace::AbstractDataFrame, pars::NamedTuple)
+	warns = DataFrame(TYPE = String[], FILE = String[], DESCRIPTION = String[])
+	DrillHole(table, trace, pars, warns)
 end
 
 Base.show(io::IO, dh::DrillHole) = print(io, "DrillHole")

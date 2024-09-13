@@ -183,7 +183,7 @@ function fillxyz!(tab, trace, pars; output=["mid"])
 			atx = out == "mid"  ? tab[i,pars.from]+tab[i,:LENGTH]/2 :
 			      out == "from" ? tab[i,pars.from] :
 			      out == "to"   ? tab[i,pars.to] : missing
-			ismissing(atx) && error("Invalid info; output kw must be a list containing \"mid\", \"from\" or \"to\"")
+			ismissing(atx) && error("Missing info; and output kw must be a list containing \"mid\", \"from\" or \"to\"")
 			b   = findbounds(dht[:,at],atx)
 			d1x = atx-dht[b[1],at]
 
